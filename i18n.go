@@ -7,42 +7,47 @@ import (
 	`github.com/storezhang/gox`
 )
 
-func I18n(lang string, errs validator.ValidationErrors) (i18n validator.ValidationErrorsTranslations) {
-	sep := "_"
-	if strings.Contains(lang, "-") {
-		sep = "-"
-	}
+var _ = Localization
 
-	splits := strings.Split(lang, sep)
-	for i := 0; i < len(splits); i++ {
-		if t, s := translator.FindTranslator(lang); s {
-			i18n = errs.Translate(t)
-
-			break
-		} else {
-			if index := strings.LastIndex(lang, sep); -1 == index {
-				break
-			} else {
-				lang = lang[0:index]
-			}
-		}
-	}
-	if nil == i18n {
-		if t, s := translator.GetTranslator("zh"); s {
-			i18n = errs.Translate(t)
-		}
-	}
-
+// Localization 取得本地化错误信息
+func Localization(lang string, errs validator.ValidationErrors) (translations validator.ValidationErrorsTranslations) {
+	translations = getTranslations(lang, errs)
 	// 得到的国际化字符串是一个带请求体的键值，类似于LoginReq.Password：错误消息
 	// 而我们需要的是password: 错误消息
-	newI18n := make(map[string]string, len(i18n))
-	for field, msg := range i18n {
-		newField := gox.InitialLowercase(gox.CamelName(field[strings.IndexRune(field, '.')+1:]))
+	newI18n := make(map[string]string, len(translations))
+	for field, msg := range translations {
+		newField := gox.InitialLowercase(gox.CamelName(field[strings.IndexRune(field, dot)+1:]))
 		newI18n[newField] = msg
 		// 删除原来的错误消息，避免前端混乱
-		delete(i18n, field)
+		delete(translations, field)
 	}
-	i18n = newI18n
+	translations = newI18n
+
+	return
+}
+
+func getTranslations(lang string, errs validator.ValidationErrors) (translations validator.ValidationErrorsTranslations) {
+	splits := strings.Split(lang, separator)
+	for index := 0; index < len(splits); index++ {
+		if translate, found := translator.FindTranslator(lang); found {
+			translations = errs.Translate(translate)
+		} else if last := strings.LastIndex(lang, separator); -1 != last {
+			lang = lang[:last]
+		}
+
+		if nil != translations {
+			break
+		}
+	}
+
+	if nil != translations {
+		return
+	}
+
+	// 默认使用中文
+	if translate, found := translator.GetTranslator(`zh`); found {
+		translations = errs.Translate(translate)
+	}
 
 	return
 }
