@@ -7,7 +7,7 @@ require (
 	github.com/go-playground/universal-translator v0.18.0
 	github.com/go-playground/validator/v10 v10.10.1
 	github.com/goexl/baozheng v0.0.1
-	github.com/storezhang/gox v1.8.4
+	github.com/goexl/gox v0.0.2
 )
 
 require (

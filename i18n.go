@@ -4,7 +4,7 @@ import (
 	`strings`
 
 	`github.com/go-playground/validator/v10`
-	`github.com/storezhang/gox`
+	`github.com/goexl/gox`
 )
 
 var _ = Localization
