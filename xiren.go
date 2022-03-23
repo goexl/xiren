@@ -19,13 +19,31 @@ var (
 )
 
 // Struct 验证结构体
-func Struct(obj interface{}) error {
-	return validate.Struct(obj)
+func Struct(obj interface{}, opts ...option) (err error) {
+	_options := defaultOptions()
+	for _, opt := range opts {
+		opt.apply(_options)
+	}
+
+	if errs := validate.Struct(obj); nil != errs {
+		err = Localization(_options.lang, errs.(validator.ValidationErrors))
+	}
+
+	return
 }
 
 // Var 验证变量
-func Var(field interface{}, tag string) error {
-	return validate.Var(field, tag)
+func Var(field interface{}, tag string, opts ...option) (err error) {
+	_options := defaultOptions()
+	for _, opt := range opts {
+		opt.apply(_options)
+	}
+
+	if errs := validate.Var(field, tag); nil != errs {
+		err = Localization(_options.lang, errs.(validator.ValidationErrors))
+	}
+
+	return
 }
 
 // New 创建新的验证器

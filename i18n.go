@@ -5,23 +5,24 @@ import (
 
 	`github.com/go-playground/validator/v10`
 	`github.com/goexl/gox`
+	`github.com/goexl/gox/field`
+
+	`github.com/goexl/exc`
 )
 
 var _ = Localization
 
 // Localization 取得本地化错误信息
-func Localization(lang string, errs validator.ValidationErrors) (translations validator.ValidationErrorsTranslations) {
-	translations = getTranslations(lang, errs)
+func Localization(lang string, errs validator.ValidationErrors) (err error) {
+	translations := getTranslations(lang, errs)
 	// 得到的国际化字符串是一个带请求体的键值，类似于LoginReq.Password：错误消息
 	// 而我们需要的是password: 错误消息
-	newI18n := make(map[string]string, len(translations))
-	for field, msg := range translations {
-		newField := gox.InitialLowercase(gox.CamelName(field[strings.IndexRune(field, dot)+1:]))
-		newI18n[newField] = msg
-		// 删除原来的错误消息，避免前端混乱
-		delete(translations, field)
+	fields := make([]gox.Field, 0, len(translations))
+	for _field, message := range translations {
+		newField := gox.InitialLowercase(gox.CamelName(_field[strings.IndexRune(_field, dot)+1:]))
+		fields = append(fields, field.String(newField, message))
 	}
-	translations = newI18n
+	err = exc.NewFields(exceptionValidate, fields...)
 
 	return
 }
@@ -45,7 +46,7 @@ func getTranslations(lang string, errs validator.ValidationErrors) (translations
 	}
 
 	// 默认使用中文
-	if translate, found := translator.GetTranslator(`zh`); found {
+	if translate, found := translator.GetTranslator(langZh); found {
 		translations = errs.Translate(translate)
 	}
 
