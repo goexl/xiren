@@ -1,13 +1,13 @@
 package xiren
 
 import (
-	`strings`
+	"strings"
 
-	`github.com/go-playground/validator/v10`
-	`github.com/goexl/gox`
-	`github.com/goexl/gox/field`
+	"github.com/go-playground/validator/v10"
+	"github.com/goexl/gox"
+	"github.com/goexl/gox/field"
 
-	`github.com/goexl/exc`
+	"github.com/goexl/exc"
 )
 
 var _ = Localization
@@ -17,10 +17,12 @@ func Localization(lang string, errs validator.ValidationErrors) (err error) {
 	translations := getTranslations(lang, errs)
 	// 得到的国际化字符串是一个带请求体的键值，类似于LoginReq.Password：错误消息
 	// 而我们需要的是password: 错误消息
-	fields := make([]gox.Field, 0, len(translations))
+	fields := make([]gox.Field[any], 0, len(translations))
 	for _field, message := range translations {
-		newField := gox.InitialLowercase(gox.CamelName(_field[strings.IndexRune(_field, dot)+1:]))
-		fields = append(fields, field.String(newField, message))
+		key := _field[strings.IndexRune(_field, dot)+1:]
+		key = gox.Case(key).Camel()
+		key = gox.Case(key).InitialLowercase()
+		fields = append(fields, field.New(key, message))
 	}
 	err = exc.NewFields(exceptionValidate, fields...)
 
