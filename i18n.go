@@ -18,11 +18,9 @@ func Localization(lang string, errs validator.ValidationErrors) (err error) {
 	// 得到的国际化字符串是一个带请求体的键值，类似于LoginReq.Password：错误消息
 	// 而我们需要的是password: 错误消息
 	fields := make([]gox.Field[any], 0, len(translations))
-	for _field, message := range translations {
-		key := _field[strings.IndexRune(_field, dot)+1:]
-		key = gox.Case(key).Camel()
-		key = gox.Case(key).InitialLowercase()
-		fields = append(fields, field.New(key, message))
+	for _field, msg := range translations {
+		key := gox.Case(_field[strings.IndexRune(_field, dot)+1:])
+		fields = append(fields, field.New(key.Camel(gox.CasePositionHead).String(), msg))
 	}
 	err = exc.NewFields(exceptionValidate, fields...)
 

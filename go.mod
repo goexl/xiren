@@ -8,7 +8,7 @@ require (
 	github.com/go-playground/validator/v10 v10.11.1
 	github.com/goexl/baozheng v0.0.1
 	github.com/goexl/exc v0.0.5
-	github.com/goexl/gox v0.1.4
+	github.com/goexl/gox v0.1.6
 )
 
 require (
