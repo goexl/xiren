@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/go-playground/locales v0.14.1
 	github.com/go-playground/universal-translator v0.18.1
-	github.com/go-playground/validator/v10 v10.15.3
+	github.com/go-playground/validator/v10 v10.15.4
 	github.com/goexl/baozheng v0.0.1
 	github.com/goexl/exc v0.0.5
 	github.com/goexl/gox v0.1.6
