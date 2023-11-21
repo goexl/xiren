@@ -7,7 +7,7 @@ import (
 	"github.com/goexl/gox"
 	"github.com/goexl/gox/field"
 
-	"github.com/goexl/exc"
+	"github.com/goexl/exception"
 )
 
 var _ = Localization
@@ -20,9 +20,9 @@ func Localization(lang string, errs validator.ValidationErrors) (err error) {
 	fields := make([]gox.Field[any], 0, len(translations))
 	for _field, msg := range translations {
 		key := gox.Case(_field[strings.IndexRune(_field, dot)+1:])
-		fields = append(fields, field.New(key.Camel(gox.CasePositionHead).String(), msg))
+		fields = append(fields, field.New(key.Camel(gox.CasePositionNone).String(), msg))
 	}
-	err = exc.NewFields(exceptionValidate, fields...)
+	err = exception.New().Message(exceptionValidate).Field(fields...).Build()
 
 	return
 }
