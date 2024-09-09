@@ -1,6 +1,7 @@
 module github.com/goexl/xiren
 
 go 1.21
+toolchain go1.23.1
 
 require (
 	github.com/go-playground/locales v0.14.1
@@ -8,7 +9,7 @@ require (
 	github.com/go-playground/validator/v10 v10.22.0
 	github.com/goexl/baozheng v0.0.1
 	github.com/goexl/exception v0.0.1
-	github.com/goexl/gox v0.3.8
+	github.com/goexl/gox v1.8.5
 )
 
 require (
