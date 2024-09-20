@@ -19,7 +19,7 @@ func Localization(lang string, errs validator.ValidationErrors) (err error) {
 	// 而我们需要的是password: 错误消息
 	fields := make([]gox.Field[any], 0, len(translations))
 	for _field, msg := range translations {
-		key := gox.String(_field[strings.IndexRune(_field, dot)+1:]).Switch().Camel().All().Build()
+		key := gox.String(_field[strings.IndexRune(_field, dot)+1:]).Switch().Camel().Upper().All().Build().Build()
 		fields = append(fields, field.New(key.Case(), msg))
 	}
 	err = exception.New().Message(exceptionValidate).Field(fields...).Build()
