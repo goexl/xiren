@@ -22,7 +22,7 @@ func Localization(lang string, errs validator.ValidationErrors) (err error) {
 		key := gox.String(_field[strings.IndexRune(_field, dot)+1:]).Switch().Camel().Upper().All().Build().Build()
 		fields = append(fields, field.New(key.Case(), msg))
 	}
-	err = exception.New().Message(exceptionValidate).Field(fields...).Build()
+	err = exception.New().Message(exceptionValidate).Field(fields[0], fields[1:]...).Build()
 
 	return
 }
