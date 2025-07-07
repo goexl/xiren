@@ -7,7 +7,7 @@ toolchain go1.24.1
 require (
 	github.com/go-playground/locales v0.14.1
 	github.com/go-playground/universal-translator v0.18.1
-	github.com/go-playground/validator/v10 v10.26.0
+	github.com/go-playground/validator/v10 v10.27.0
 	github.com/goexl/baozheng v0.0.1
 	github.com/goexl/exception v0.0.4
 	github.com/goexl/gox v1.9.2
